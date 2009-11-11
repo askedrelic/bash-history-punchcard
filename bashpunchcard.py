@@ -67,12 +67,13 @@ class TimeHistory(object):
         sizes.extend([0] * 24)
         chart.add_data(sizes)
 
-        chart.set_axis_labels('x', [''] + [str(h) for h  in range(24)] + [''])
+        #Easier to manually set the x label for the 12am/12pm labels 
+        chart.set_axis_labels('x', ['|12am|1|2|3|4|5|6|7|8|9|10|11|12pm|1|2|3|4|5|6|7|8|9|10|11|'])
         chart.set_axis_labels('y', [''] + [day_names[n] for n in days] + [''])
 
         chart.add_marker(1, 1.0, 'o', '333333', 25)
         chart.download('historychart.png')
-        #return chart.get_url() + '&chds=-1,24,-1,7,0,20'
+        #return chart.get_url()
 
 if __name__ == '__main__':
     th = TimeHistory()
