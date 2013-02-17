@@ -14,3 +14,7 @@ Ideas and most code from:
 -	http://dustin.github.com/2009/01/11/timecard.html
 
 -	http://github.com/dustin/bindir/blob/master/gitaggregates.py
+
+License:
+
+See attached LICENSE
