@@ -1,6 +1,10 @@
 #Punchcard Bash History
 
-![Bash usage](https://raw.github.com/askedrelic/bash-history-punchcard/master/sample.png)
+How I work at home (~3 years ago)
+![Home usage](https://raw.github.com/askedrelic/bash-history-punchcard/master/sample-home.png)
+
+My current work machine (loving that 10-6)
+![Work usage](https://raw.github.com/askedrelic/bash-history-punchcard/master/sample-work.png)
 
 Visualize when you are using bash (and hopefully getting work done).
 
