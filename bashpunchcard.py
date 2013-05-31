@@ -5,7 +5,7 @@ Copyright (C) 2009  Matt Behrens <askedrelic@gmail.com> http://asktherelic.com
 Script for creating a github style punchcard of your bash history.
 
 Requires
--the HISTTIMEFORMAT variable to be set, which includes unix timestamps 
+-the HISTTIMEFORMAT variable to be set, which includes unix timestamps
 on all bash commands.
 
 -pygooglechart
@@ -24,6 +24,9 @@ import re
 import sys
 import time
 
+from pygooglechart import ScatterChart
+
+
 class TimeHistory(object):
 
     def __init__(self, width=800, height=300, is12h=True, monday_first=True,
@@ -39,8 +42,8 @@ class TimeHistory(object):
     def add_logs(self):
         #Find users default bash history file
         with open(expanduser('~/.bash_history'), 'r') as histfile:
-            R = re.compile(r'#\d+$');
-            lines = [time.strftime("%w %H", time.localtime(float(line[1:]))) \
+            R = re.compile(r'#\d+$')
+            lines = [time.strftime("%w %H", time.localtime(float(line[1:])))
                      for line in histfile if R.match(line)]
             for k, g in groupby(sorted(lines)):
                 self.h[k] += sum(1 for _ in g)
@@ -52,16 +55,11 @@ class TimeHistory(object):
                                  % (h, d, self.h["%d %02d" % (d, h)]))
 
     def to_gchart(self):
-        from pygooglechart import ScatterChart
         chart = ScatterChart(self.width, self.height,
                              x_range=(-1, 24), y_range=(-1, 7))
 
-        chart.add_data([(h % 24) for h in range(24 * 8)])
-
-        d=[]
-        for i in range(8):
-            d.extend([i] * 24)
-        chart.add_data(d)
+        chart.add_data([(h % 24) for h in range(24 * 7)])
+        chart.add_data([(h / 24) for h in range(24 * 7)])
 
         day_names = "Sun Mon Tue Wed Thu Fri Sat".split(" ")
         if self.monday_first:
@@ -69,26 +67,25 @@ class TimeHistory(object):
         else:
             days = (6, 5, 4, 3, 2, 1, 0)
 
-        sizes=[]
+        sizes = []
         for d in days:
             sizes.extend([self.h["%d %02d" % (d, h)] for h in range(24)])
-        sizes.extend([0] * 24)
         chart.add_data(sizes)
 
         if self.title:
             chart.set_title(self.title)
         if self.is12h:
-          xlabels = ('|12am|1|2|3|4|5|6|7|8|9|10|11|'
-                     '12pm|1|2|3|4|5|6|7|8|9|10|11|')
+            xlabels = ('|12am|1|2|3|4|5|6|7|8|9|10|11|'
+                       '12pm|1|2|3|4|5|6|7|8|9|10|11|')
         else:
-          xlabels = ('|0|1|2|3|4|5|6|7|8|9|10|11|'
-                     '12|13|14|15|16|17|18|19|20|21|22|23|')
+            xlabels = ('|0|1|2|3|4|5|6|7|8|9|10|11|'
+                       '12|13|14|15|16|17|18|19|20|21|22|23|')
         chart.set_axis_labels('x', [xlabels])
         chart.set_axis_labels('y', [''] + [day_names[n] for n in days] + [''])
 
         chart.add_marker(1, 1.0, 'o', '333333', 25)
         chart.download(self.output)
-        #return chart.get_url()
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -109,5 +106,4 @@ if __name__ == '__main__':
                      monday_first=args.monday_first, title=args.title,
                      output=args.output)
     th.add_logs()
-    #th.dump()
     th.to_gchart()
