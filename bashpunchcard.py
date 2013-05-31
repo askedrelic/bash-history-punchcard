@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Copyright (C) 2009  Matt Behrens <askedrelic@gmail.com> http://asktherelic.com
 
@@ -15,11 +16,12 @@ http://dustin.github.com/2009/01/11/timecard.html
 http://github.com/dustin/bindir/blob/master/gitaggregates.py
 """
 
-import time
-import sys
-import os
-import subprocess
 from collections import defaultdict
+from itertools import groupby
+from os.path import expanduser
+import re
+import sys
+import time
 
 class TimeHistory(object):
 
@@ -28,18 +30,12 @@ class TimeHistory(object):
 
     def add_logs(self):
         #Find users default bash history file
-        histfile = open(os.getenv("HOME") + '/.bash_history', 'r')
-
-        for line in histfile:
-            #If history line has a timestamp
-            if "#" in line:
-                #Remove the #
-                line = line[1:]
-                #Blunt method for ignoring lines that aren't timestamps
-                try: 
-                    self.h[time.strftime("%w %H", time.localtime(float(line.strip())))] += 1
-                except:
-                    pass
+        with open(expanduser('~/.bash_history'), 'r') as histfile:
+            R = re.compile(r'#\d+$');
+            lines = [time.strftime("%w %H", time.localtime(float(line[1:]))) \
+                     for line in histfile if R.match(line)]
+            for k, g in groupby(sorted(lines)):
+                self.h[k] += sum(1 for _ in g)
 
     def dump(self):
         for h in range(24):
