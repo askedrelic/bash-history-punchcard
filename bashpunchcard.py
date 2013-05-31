@@ -27,12 +27,13 @@ import time
 class TimeHistory(object):
 
     def __init__(self, width=800, height=300, is12h=True, monday_first=True,
-                 output='historychart.png'):
+                 title=None, output='historychart.png'):
         self.h = defaultdict(lambda: 0)
         self.width = width
         self.height = height
         self.is12h = is12h
         self.monday_first = monday_first
+        self.title = title
         self.output = output
 
     def add_logs(self):
@@ -74,6 +75,8 @@ class TimeHistory(object):
         sizes.extend([0] * 24)
         chart.add_data(sizes)
 
+        if self.title:
+            chart.set_title(self.title)
         if self.is12h:
           xlabels = ('|12am|1|2|3|4|5|6|7|8|9|10|11|'
                      '12pm|1|2|3|4|5|6|7|8|9|10|11|')
@@ -97,12 +100,14 @@ if __name__ == '__main__':
                         help='24-hour clock', dest='is12h')
     parser.add_argument('-s', '--sunday', action='store_false',
                         help='Sunday at top', dest='monday_first')
+    parser.add_argument('-t', '--title', help='chart title')
     parser.add_argument('-o', '--output', default='historychart.png',
                         help='output image filename (default: %(default)s)')
     args = parser.parse_args()
 
     th = TimeHistory(width=args.width, height=args.height, is12h=args.is12h,
-                     monday_first=args.monday_first, output=args.output)
+                     monday_first=args.monday_first, title=args.title,
+                     output=args.output)
     th.add_logs()
     #th.dump()
     th.to_gchart()
