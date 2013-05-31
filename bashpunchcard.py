@@ -16,6 +16,7 @@ http://dustin.github.com/2009/01/11/timecard.html
 http://github.com/dustin/bindir/blob/master/gitaggregates.py
 """
 
+import argparse
 from collections import defaultdict
 from itertools import groupby
 from os.path import expanduser
@@ -25,8 +26,9 @@ import time
 
 class TimeHistory(object):
 
-    def __init__(self):
+    def __init__(self, is12h=True):
         self.h = defaultdict(lambda: 0)
+        self.is12h = is12h
 
     def add_logs(self):
         #Find users default bash history file
@@ -63,8 +65,13 @@ class TimeHistory(object):
         sizes.extend([0] * 24)
         chart.add_data(sizes)
 
-        #Easier to manually set the x label for the 12am/12pm labels 
-        chart.set_axis_labels('x', ['|12am|1|2|3|4|5|6|7|8|9|10|11|12pm|1|2|3|4|5|6|7|8|9|10|11|'])
+        if self.is12h:
+          xlabels = ('|12am|1|2|3|4|5|6|7|8|9|10|11|'
+                     '12pm|1|2|3|4|5|6|7|8|9|10|11|')
+        else:
+          xlabels = ('|0|1|2|3|4|5|6|7|8|9|10|11|'
+                     '12|13|14|15|16|17|18|19|20|21|22|23|')
+        chart.set_axis_labels('x', [xlabels])
         chart.set_axis_labels('y', [''] + [day_names[n] for n in days] + [''])
 
         chart.add_marker(1, 1.0, 'o', '333333', 25)
@@ -72,7 +79,12 @@ class TimeHistory(object):
         #return chart.get_url()
 
 if __name__ == '__main__':
-    th = TimeHistory()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-2', '--24', action='store_false',
+                        help='24-hour clock', dest='is12h')
+    args = parser.parse_args()
+
+    th = TimeHistory(is12h=args.is12h)
     th.add_logs()
     #th.dump()
     th.to_gchart()
