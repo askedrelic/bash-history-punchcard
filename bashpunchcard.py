@@ -26,8 +26,10 @@ import time
 
 class TimeHistory(object):
 
-    def __init__(self, is12h=True):
+    def __init__(self, width=800, height=300, is12h=True):
         self.h = defaultdict(lambda: 0)
+        self.width = width
+        self.height = height
         self.is12h = is12h
 
     def add_logs(self):
@@ -47,7 +49,8 @@ class TimeHistory(object):
 
     def to_gchart(self):
         from pygooglechart import ScatterChart
-        chart = ScatterChart(800, 300, x_range=(-1, 24), y_range=(-1, 7))
+        chart = ScatterChart(self.width, self.height,
+                             x_range=(-1, 24), y_range=(-1, 7))
 
         chart.add_data([(h % 24) for h in range(24 * 8)])
 
@@ -80,11 +83,15 @@ class TimeHistory(object):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument('-W', '--width', default=800, type=int,
+                        help='chart width (default: %(default)d)')
+    parser.add_argument('-H', '--height', default=300, type=int,
+                        help='chart height (default: %(default)d)')
     parser.add_argument('-2', '--24', action='store_false',
                         help='24-hour clock', dest='is12h')
     args = parser.parse_args()
 
-    th = TimeHistory(is12h=args.is12h)
+    th = TimeHistory(width=args.width, height=args.height, is12h=args.is12h)
     th.add_logs()
     #th.dump()
     th.to_gchart()
