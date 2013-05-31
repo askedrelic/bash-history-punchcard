@@ -26,11 +26,13 @@ import time
 
 class TimeHistory(object):
 
-    def __init__(self, width=800, height=300, is12h=True, output='historychart.png'):
+    def __init__(self, width=800, height=300, is12h=True, monday_first=True,
+                 output='historychart.png'):
         self.h = defaultdict(lambda: 0)
         self.width = width
         self.height = height
         self.is12h = is12h
+        self.monday_first = monday_first
         self.output = output
 
     def add_logs(self):
@@ -61,7 +63,10 @@ class TimeHistory(object):
         chart.add_data(d)
 
         day_names = "Sun Mon Tue Wed Thu Fri Sat".split(" ")
-        days = (0, 6, 5, 4, 3, 2, 1)
+        if self.monday_first:
+            days = (0, 6, 5, 4, 3, 2, 1)
+        else:
+            days = (6, 5, 4, 3, 2, 1, 0)
 
         sizes=[]
         for d in days:
@@ -90,12 +95,14 @@ if __name__ == '__main__':
                         help='chart height (default: %(default)d)')
     parser.add_argument('-2', '--24', action='store_false',
                         help='24-hour clock', dest='is12h')
+    parser.add_argument('-s', '--sunday', action='store_false',
+                        help='Sunday at top', dest='monday_first')
     parser.add_argument('-o', '--output', default='historychart.png',
                         help='output image filename (default: %(default)s)')
     args = parser.parse_args()
 
     th = TimeHistory(width=args.width, height=args.height, is12h=args.is12h,
-                     output=args.output)
+                     monday_first=args.monday_first, output=args.output)
     th.add_logs()
     #th.dump()
     th.to_gchart()
