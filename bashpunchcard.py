@@ -26,11 +26,12 @@ import time
 
 class TimeHistory(object):
 
-    def __init__(self, width=800, height=300, is12h=True):
+    def __init__(self, width=800, height=300, is12h=True, output='historychart.png'):
         self.h = defaultdict(lambda: 0)
         self.width = width
         self.height = height
         self.is12h = is12h
+        self.output = output
 
     def add_logs(self):
         #Find users default bash history file
@@ -78,7 +79,7 @@ class TimeHistory(object):
         chart.set_axis_labels('y', [''] + [day_names[n] for n in days] + [''])
 
         chart.add_marker(1, 1.0, 'o', '333333', 25)
-        chart.download('historychart.png')
+        chart.download(self.output)
         #return chart.get_url()
 
 if __name__ == '__main__':
@@ -89,9 +90,12 @@ if __name__ == '__main__':
                         help='chart height (default: %(default)d)')
     parser.add_argument('-2', '--24', action='store_false',
                         help='24-hour clock', dest='is12h')
+    parser.add_argument('-o', '--output', default='historychart.png',
+                        help='output image filename (default: %(default)s)')
     args = parser.parse_args()
 
-    th = TimeHistory(width=args.width, height=args.height, is12h=args.is12h)
+    th = TimeHistory(width=args.width, height=args.height, is12h=args.is12h,
+                     output=args.output)
     th.add_logs()
     #th.dump()
     th.to_gchart()
