@@ -27,16 +27,20 @@ import time
 from pygooglechart import ScatterChart
 
 
+DAYS_COLORS = ['000000']*7
+
+
 class TimeHistory(object):
 
     def __init__(self, width=800, height=300, is12h=True, monday_first=True,
-                 title=None, output='historychart.png'):
+                 title=None, colors=None, output='historychart.png'):
         self.h = defaultdict(lambda: 0)
         self.width = width
         self.height = height
         self.is12h = is12h
         self.monday_first = monday_first
         self.title = title
+        self.colors = colors
         self.output = output
 
     def add_logs(self):
@@ -58,8 +62,8 @@ class TimeHistory(object):
         chart = ScatterChart(self.width, self.height,
                              x_range=(-1, 24), y_range=(-1, 7))
 
-        chart.add_data([(h % 24) for h in range(24 * 7)])
-        chart.add_data([(h / 24) for h in range(24 * 7)])
+        chart.add_data([(h / 7) for h in range(24 * 7)])
+        chart.add_data([(h % 7) for h in range(24 * 7)])
 
         day_names = "Sun Mon Tue Wed Thu Fri Sat".split(" ")
         if self.monday_first:
@@ -68,9 +72,14 @@ class TimeHistory(object):
             days = (6, 5, 4, 3, 2, 1, 0)
 
         sizes = []
-        for d in days:
-            sizes.extend([self.h["%d %02d" % (d, h)] for h in range(24)])
+        for h in range(24):
+            sizes.extend([self.h["%d %02d" % (d, h)] for d in days])
         chart.add_data(sizes)
+
+        if self.colors:
+            colors = self.colors[:]
+            colors.reverse()
+            chart.set_colours_within_series(colors)
 
         if self.title:
             chart.set_title(self.title)
@@ -98,12 +107,18 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--sunday', action='store_false',
                         help='Sunday at top', dest='monday_first')
     parser.add_argument('-t', '--title', help='chart title')
+    parser.add_argument('-c', '--colors', default=','.join(DAYS_COLORS),
+                        help=('colors of days, top to bottom '
+                              '(default: %(default)s)'))
     parser.add_argument('-o', '--output', default='historychart.png',
                         help='output image filename (default: %(default)s)')
     args = parser.parse_args()
 
+    colors = DAYS_COLORS
+    if args.colors:
+        colors = args.colors.split(',')
     th = TimeHistory(width=args.width, height=args.height, is12h=args.is12h,
                      monday_first=args.monday_first, title=args.title,
-                     output=args.output)
+                     colors=colors, output=args.output)
     th.add_logs()
     th.to_gchart()
