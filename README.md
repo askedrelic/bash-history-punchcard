@@ -24,11 +24,15 @@ Set these in your .bashrc or .bash_profile, and reopen your shell.
 If you type some commands then do `history`, 
 you should see your bash history with a line number, timestamp, and the command
 
-##Ideas and most code from:
+## Ideas and most code from:
 
 - http://dustin.github.com/2009/01/11/timecard.html
 - http://github.com/dustin/bindir/blob/master/gitaggregates.py
 
-##License
+## License
 
 MIT, See attached LICENSE
+
+## Related
+
+- [Wordpress Post History Exporter:](http://aaron.jorb.in/blog/2013/02/punch-card-of-posts-on-this-site/) https://github.com/aaronjorbin/wordpress-post-history-bashcard
