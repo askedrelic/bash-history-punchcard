@@ -26,7 +26,7 @@ setup(
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'Operating System :: OS Independent',
-        'Development Status :: 4 - Beta'
+        'Development Status :: 4 - Beta',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',

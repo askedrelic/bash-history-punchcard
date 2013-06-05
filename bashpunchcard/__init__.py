@@ -16,9 +16,9 @@ http://dustin.github.com/2009/01/11/timecard.html
 http://github.com/dustin/bindir/blob/master/gitaggregates.py
 """
 
-__version__ = '0.1'
+__version__ = '0.1.1'
 __author__ = 'Matt Behrens'
-__description__ = 'Command line script for creating a PNG punchcard graph of your bash history.'
+__description__ = 'Command line script for creating a PNG punchcard graph of your bash history'
 
 import argparse
 import re
