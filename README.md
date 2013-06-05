@@ -35,4 +35,5 @@ MIT, See attached LICENSE
 
 ## Related
 
-- [Wordpress Post History Exporter:](http://aaron.jorb.in/blog/2013/02/punch-card-of-posts-on-this-site/) https://github.com/aaronjorbin/wordpress-post-history-bashcard
+- Wordpress Post History Exporter: http://aaron.jorb.in/blog/2013/02/punch-card-of-posts-on-this-site/ [Code](https://github.com/aaronjorbin/wordpress-post-history-bashcard)
+- Blogger Post History Exporter: http://blog.yjl.im/2013/06/blogger-posting-punchcard.html [Code](https://gist.github.com/livibetter/2011993)
