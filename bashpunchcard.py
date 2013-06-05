@@ -27,13 +27,15 @@ import time
 from pygooglechart import ScatterChart
 
 
+DEFAULT_INPUT = expanduser('~/.bash_history')
 DAYS_COLORS = ['000000']*7
 
 
 class TimeHistory(object):
 
     def __init__(self, width=800, height=300, is12h=True, monday_first=True,
-                 title=None, colors=None, output='historychart.png'):
+                 title=None, colors=None, input=DEFAULT_INPUT,
+                 output='historychart.png'):
         self.h = defaultdict(lambda: 0)
         self.width = width
         self.height = height
@@ -41,11 +43,12 @@ class TimeHistory(object):
         self.monday_first = monday_first
         self.title = title
         self.colors = colors
+        self.input = input
         self.output = output
 
     def add_logs(self):
         #Find users default bash history file
-        with open(expanduser('~/.bash_history'), 'r') as histfile:
+        with open(self.input, 'r') as histfile:
             R = re.compile(r'#\d+$')
             lines = [time.strftime("%w %H", time.localtime(float(line[1:])))
                      for line in histfile if R.match(line)]
@@ -110,6 +113,8 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--colors', default=','.join(DAYS_COLORS),
                         help=('colors of days, top to bottom '
                               '(default: %(default)s)'))
+    parser.add_argument('-i', '--input', default=DEFAULT_INPUT,
+                        help='input filename (default: %(default)s)')
     parser.add_argument('-o', '--output', default='historychart.png',
                         help='output image filename (default: %(default)s)')
     args = parser.parse_args()
@@ -119,6 +124,6 @@ if __name__ == '__main__':
         colors = args.colors.split(',')
     th = TimeHistory(width=args.width, height=args.height, is12h=args.is12h,
                      monday_first=args.monday_first, title=args.title,
-                     colors=colors, output=args.output)
+                     colors=colors, input=args.input, output=args.output)
     th.add_logs()
     th.to_gchart()
