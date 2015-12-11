@@ -1,9 +1,9 @@
-import matplotlib.pyplot as pyplot
+import matplotlib.pyplot as plt
 import random
 
 # # Create some data to plot
-pyplot.rc('font', family='Arial')
-# num_datapoints = 20 
+plt.rc('font', family='Arial')
+# num_datapoints = 20
 # x_data = range(24)
 # y_data = range(24)
 # # Create a Figure object.
@@ -64,15 +64,15 @@ maxrender = 325 # seems good enough
 xs, ys, rs, ss = [], [], [], []
 for y, d in enumerate(data):
     for x, n in enumerate(d):
-        xs.append(x) 
-        ys.append(y) 
+        xs.append(x)
+        ys.append(y)
         linear_scale = float(n)/float(maxvalue) * maxrender
-        log_scale = linear_scale**2/maxrender 
+        log_scale = linear_scale**2/maxrender
         ss.append(log_scale)
 
 def gen_plot():
     # create a figure an axes with the same background color
-    fig = pyplot.figure(figsize=(8, title and 3 or 2.5),
+    fig = plt.figure(figsize=(8, title and 3 or 2.5),
                         facecolor='#efefef')
     ax = fig.add_subplot('111', axisbg='#efefef')
     # make the figure margins smaller
