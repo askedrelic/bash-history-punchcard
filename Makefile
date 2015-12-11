@@ -7,4 +7,4 @@ pip:
 	env/bin/pip install -r requirements.txt
 
 clean:
-	rm -rf env/
+	find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf
